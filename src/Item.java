@@ -14,6 +14,7 @@ public class Item {
     private String description;
     private int upc;
     private int serialNumber;
+    private int reqCred;
     
     //constructors
 
@@ -22,13 +23,15 @@ public class Item {
         description = "Null Item";
         upc = 0;
         serialNumber = 0;
+        reqCred = 0;
     }
 
-    public Item(String name, String description, int upc, int serialNumber) {
+    public Item(String name, String description, int upc, int serialNumber, int reqCred) {
         this.name = name;
         this.description = description;
         this.upc = upc;
         this.serialNumber = serialNumber;
+        this.reqCred = reqCred;
     }
     
     //getters and setters
@@ -63,6 +66,14 @@ public class Item {
 
     public void setSerialNumber(int serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public int getReqCred() {
+        return reqCred;
+    }
+
+    public void setReqCred(int reqCred) {
+        this.reqCred = reqCred;
     }
     
 }
