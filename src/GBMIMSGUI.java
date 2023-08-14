@@ -1,3 +1,8 @@
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -63,7 +68,6 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         lblLoginTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblLoginTitle.setText("GB Manufacturing Inventory Management System");
@@ -83,6 +87,11 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         txfPassword.setPreferredSize(new java.awt.Dimension(256, 24));
 
         btnLogin.setText("Sign In");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
         pnlLogin.setLayout(pnlLoginLayout);
@@ -359,7 +368,31 @@ public class GBMIMSGUI extends javax.swing.JFrame {
 
     private void btnOrderLogsLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderLogsLoadActionPerformed
         // TODO add your handling code here:
+        //get log
+        try {
+            DataIO data = new DataIO(); // create DataIO object
+            //load orders
+            ArrayList<Order> logs = data.getOrderList();
+            for(int i = 0; i < logs.size(); i++)
+            {
+                //TODO: DISPLAY
+                
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnOrderLogsLoadActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        if(login())
+        {
+        tabMain.setSelectedIndex(1);
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -434,4 +467,38 @@ public class GBMIMSGUI extends javax.swing.JFrame {
     private javax.swing.JTextField txfPassword;
     private javax.swing.JTextField txfUsername;
     // End of variables declaration//GEN-END:variables
+
+    public boolean login() {
+        //get username and password from text fields
+        String eid = txfUsername.getText();
+        String pass = txfPassword.getText();
+        
+        //try to validate login
+        try {
+            DataIO data = new DataIO(); // create DataIO object
+            //load employees
+            ArrayList<Employee> employees = data.getEmployeeList();
+            for(int i = 0; i < employees.size(); i++)
+            {
+                if(employees.get(i).getEmpID() == eid)
+                {
+                    if(employees.get(i).getPassword().equals(pass))
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return false;
+    }
+
+    
+    
 }
