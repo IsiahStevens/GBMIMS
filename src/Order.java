@@ -1,3 +1,6 @@
+
+import java.util.ArrayList;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -12,7 +15,7 @@ public class Order {
     //attributes
     private int orderNumber;
     private Employee orderOwner;
-    private Item[] orderItems;
+    private ArrayList<Item> orderItems;
     private String status;
     
     //constructors
@@ -20,11 +23,11 @@ public class Order {
     public Order(){
         orderNumber = 0;
         orderOwner = null;
-        orderItems = null;
+        orderItems = new ArrayList<Item>();
         status = "Null";
     }
 
-    public Order(int orderNumber, Employee orderOwner, Item[] orderItems, String status) {
+    public Order(int orderNumber, Employee orderOwner, ArrayList<Item> orderItems, String status) {
         this.orderNumber = orderNumber;
         this.orderOwner = orderOwner;
         this.orderItems = orderItems;
@@ -49,11 +52,11 @@ public class Order {
         this.orderOwner = orderOwner;
     }
 
-    public Item[] getOrderItems() {
+    public ArrayList<Item> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(Item[] orderItems) {
+    public void setOrderItems(ArrayList<Item> orderItems) {
         this.orderItems = orderItems;
     }
 
