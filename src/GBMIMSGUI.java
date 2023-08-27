@@ -1,6 +1,7 @@
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 /*
@@ -14,6 +15,11 @@ import javax.swing.JOptionPane;
  */
 public class GBMIMSGUI extends javax.swing.JFrame {
 
+    
+    //class level variables
+    DefaultListModel<String> newOrderCart = new DefaultListModel();
+    DefaultListModel<Order> myOrders = new DefaultListModel();
+    
     /**
      * Creates new form GBMIMSGUI
      */
@@ -41,17 +47,18 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         pnlNewOrder = new javax.swing.JPanel();
         lblNewOrderTitle = new javax.swing.JLabel();
         scpNewOrderInventoryList = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jlstNewOrderInventory = new javax.swing.JList<>();
         scpNewOrderPreview = new javax.swing.JScrollPane();
-        txaNewOrderPreview = new javax.swing.JTextArea();
+        jlstNewOrderOrderPreview = new javax.swing.JList<>();
         btnNewOrderLoadInventory = new javax.swing.JButton();
         btnNewOrderAddItem = new javax.swing.JButton();
         btnNewOrderSubmit = new javax.swing.JButton();
+        btnNewOrderRemoveItem = new javax.swing.JButton();
         pnlMyOrders = new javax.swing.JPanel();
         lblMyOrdersTitle = new javax.swing.JLabel();
         btnMyOrdersReturn = new javax.swing.JButton();
         scpMyOrdersOrderList = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        jlstMyOrders = new javax.swing.JList<>();
         scpMyOrdersPreview = new javax.swing.JScrollPane();
         txaMyOrdersPreview = new javax.swing.JTextArea();
         btnMyOrdersLoadOrders = new javax.swing.JButton();
@@ -142,16 +149,15 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         lblNewOrderTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblNewOrderTitle.setText("New Order");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jlstNewOrderInventory.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        scpNewOrderInventoryList.setViewportView(jList1);
+        scpNewOrderInventoryList.setViewportView(jlstNewOrderInventory);
 
-        txaNewOrderPreview.setColumns(20);
-        txaNewOrderPreview.setRows(5);
-        scpNewOrderPreview.setViewportView(txaNewOrderPreview);
+        jlstNewOrderOrderPreview.setModel(newOrderCart);
+        scpNewOrderPreview.setViewportView(jlstNewOrderOrderPreview);
 
         btnNewOrderLoadInventory.setText("Load/Refresh Inventory");
         btnNewOrderLoadInventory.addActionListener(new java.awt.event.ActionListener() {
@@ -161,8 +167,25 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         });
 
         btnNewOrderAddItem.setText("Add Item");
+        btnNewOrderAddItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewOrderAddItemActionPerformed(evt);
+            }
+        });
 
         btnNewOrderSubmit.setText("Submit");
+        btnNewOrderSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewOrderSubmitActionPerformed(evt);
+            }
+        });
+
+        btnNewOrderRemoveItem.setText("Remove Item");
+        btnNewOrderRemoveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewOrderRemoveItemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlNewOrderLayout = new javax.swing.GroupLayout(pnlNewOrder);
         pnlNewOrder.setLayout(pnlNewOrderLayout);
@@ -181,9 +204,12 @@ public class GBMIMSGUI extends javax.swing.JFrame {
                         .addComponent(btnNewOrderAddItem))
                     .addComponent(scpNewOrderInventoryList))
                 .addGap(18, 18, 18)
-                .addGroup(pnlNewOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlNewOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scpNewOrderPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNewOrderSubmit, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(pnlNewOrderLayout.createSequentialGroup()
+                        .addComponent(btnNewOrderRemoveItem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnNewOrderSubmit)))
                 .addContainerGap())
         );
         pnlNewOrderLayout.setVerticalGroup(
@@ -199,7 +225,8 @@ public class GBMIMSGUI extends javax.swing.JFrame {
                 .addGroup(pnlNewOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNewOrderLoadInventory)
                     .addComponent(btnNewOrderAddItem)
-                    .addComponent(btnNewOrderSubmit))
+                    .addComponent(btnNewOrderSubmit)
+                    .addComponent(btnNewOrderRemoveItem))
                 .addGap(70, 70, 70))
         );
 
@@ -210,12 +237,8 @@ public class GBMIMSGUI extends javax.swing.JFrame {
 
         btnMyOrdersReturn.setText("Return");
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        scpMyOrdersOrderList.setViewportView(jList2);
+        jlstMyOrders.setModel(myOrders);
+        scpMyOrdersOrderList.setViewportView(jlstMyOrders);
 
         txaMyOrdersPreview.setColumns(20);
         txaMyOrdersPreview.setRows(5);
@@ -392,7 +415,50 @@ public class GBMIMSGUI extends javax.swing.JFrame {
         {
         tabMain.setSelectedIndex(1);
         }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: LOGIN FAILED", "USER AUTH FAILED", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnNewOrderRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewOrderRemoveItemActionPerformed
+        //get selected item from list
+        String itm = jlstNewOrderOrderPreview.getSelectedValue();
+        
+        //if something is selected, add it to the order
+        if(itm != null)
+        {
+            newOrderCart.removeElement(jlstNewOrderOrderPreview.getSelectedValue());
+        }
+    }//GEN-LAST:event_btnNewOrderRemoveItemActionPerformed
+
+    private void btnNewOrderAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewOrderAddItemActionPerformed
+        //get selected item from list
+        String itm = jlstNewOrderInventory.getSelectedValue();
+        
+        //if something is selected, add it to the order
+        if(itm != null)
+        {
+            newOrderCart.add(newOrderCart.getSize(), itm);
+        }
+    }//GEN-LAST:event_btnNewOrderAddItemActionPerformed
+
+    private void btnNewOrderSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewOrderSubmitActionPerformed
+        //check if order is empty
+        if(newOrderCart.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Error: cart is empty",
+                    "Empty Order Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            //if not empty, create order
+            Order newOrder = new Order();
+            myOrders.add(myOrders.getSize(), newOrder);
+            tabMain.setSelectedIndex(2);
+            
+        }
+    }//GEN-LAST:event_btnNewOrderSubmitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -435,14 +501,16 @@ public class GBMIMSGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMyOrdersReturn;
     private javax.swing.JButton btnNewOrderAddItem;
     private javax.swing.JButton btnNewOrderLoadInventory;
+    private javax.swing.JButton btnNewOrderRemoveItem;
     private javax.swing.JButton btnNewOrderSubmit;
     private javax.swing.JButton btnOrderLogsDelete;
     private javax.swing.JButton btnOrderLogsLoad;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JList<Order> jlstMyOrders;
+    private javax.swing.JList<String> jlstNewOrderInventory;
+    private javax.swing.JList<String> jlstNewOrderOrderPreview;
     private javax.swing.JLabel lblLoginTitle;
     private javax.swing.JLabel lblMyOrdersTitle;
     private javax.swing.JLabel lblNewOrderTitle;
@@ -462,7 +530,6 @@ public class GBMIMSGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane scpOrderlogsPreview;
     private javax.swing.JTabbedPane tabMain;
     private javax.swing.JTextArea txaMyOrdersPreview;
-    private javax.swing.JTextArea txaNewOrderPreview;
     private javax.swing.JTextArea txaOrderLogsPreview;
     private javax.swing.JTextField txfPassword;
     private javax.swing.JTextField txfUsername;
@@ -487,7 +554,10 @@ public class GBMIMSGUI extends javax.swing.JFrame {
                         return true;
                     }
                     else
+                    {
+                        
                         return false;
+                    }
                 }
             }
             

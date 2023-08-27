@@ -20,7 +20,7 @@ import java.sql.*;
 public class DataIO {
 
     //constants
-    private final String DATABASE_NAME = "cis355a";
+    private final String DATABASE_NAME = "ceis400";
     private final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/" + DATABASE_NAME;
     private final String USER_NAME = "root";
     private final String PASSWORD = "admin";
@@ -35,9 +35,9 @@ public class DataIO {
                 USER_NAME, PASSWORD);
 
         //add record 
-        String strSQL = "INSERT INTO landscape (CustomerName, CustomerAddress, "
-                + "LandscapeType, YardLength, YardWidth, LandscapeCost) "
-                + "VALUES(?, ?, ?, ?, ?, ?)";
+        String strSQL = "INSERT INTO employee (empID, firstname, "
+                + "lastname, password, credentials) "
+                + "VALUES(?, ?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(strSQL);
         pstmt.setString(1, emp.getFirstname());
         pstmt.setString(2, emp.getLastname());
@@ -62,7 +62,7 @@ public class DataIO {
                 USER_NAME, PASSWORD);
 
         Statement statement = conn.createStatement();
-        String SQL = "Select * FROM landscape";
+        String SQL = "Select * FROM employee";
         ResultSet rs = statement.executeQuery(SQL);
 
         while (rs.next()) {
@@ -220,8 +220,8 @@ public class DataIO {
             // create Customer object and load the attributes
             Order ord = new Order();
             ord.setOrderNumber(rs.getInt(1));
-            ord.setOrderOwner(rs.getObject(2));
-            ord.setOrderItems(rs.getObject(3));
+           // ord.setOrderOwner(rs.getObject(2));
+            //ord.setOrderItems(rs.getObject(3));
             ord.setStatus(rs.getString(4));
 
             // add the Customer object to our list
