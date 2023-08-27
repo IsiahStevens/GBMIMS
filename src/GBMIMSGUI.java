@@ -456,7 +456,7 @@ public class GBMIMSGUI extends javax.swing.JFrame {
             Order newOrder = new Order();
             myOrders.add(myOrders.getSize(), newOrder);
             tabMain.setSelectedIndex(2);
-            //yay!
+            //yeet
             
         }
     }//GEN-LAST:event_btnNewOrderSubmitActionPerformed
